@@ -20,7 +20,6 @@
         typingIndicator: !!typingIndicator
     });
 
-    // Send message button handler
     if (sendBtn) {
         sendBtn.addEventListener('click', () => {
             console.log('Send button clicked');
@@ -28,14 +27,12 @@
         });
     }
 
-    // Clear chat button handler
     clearBtn.addEventListener('click', () => {
         if (confirm('Clear conversation history?')) {
             vscode.postMessage({ type: 'clearChat' });
         }
     });
 
-    // Enter key to send (Shift+Enter for new line)
     if (messageInput) {
         messageInput.addEventListener('keydown', (e) => {
             console.log('Key pressed:', e.key, 'Shift:', e.shiftKey);
@@ -47,7 +44,6 @@
         });
     }
 
-    // Auto-resize textarea
     if (messageInput) {
         messageInput.addEventListener('input', () => {
             messageInput.style.height = 'auto';
@@ -55,7 +51,6 @@
         });
     }
 
-    // Handle file link clicks using event delegation
     chatMessages.addEventListener('click', (e) => {
         if (e.target.classList.contains('file-link')) {
             const filePath = e.target.getAttribute('data-file');
@@ -68,7 +63,6 @@
         }
     });
 
-    // Listen for messages from extension
     window.addEventListener('message', event => {
         const message = event.data;
         
@@ -121,7 +115,6 @@
     function addMessageToChat(message) {
         console.log('addMessageToChat called with:', message);
         
-        // Remove welcome message on first user message
         const welcomeMsg = document.querySelector('.welcome-message');
         if (welcomeMsg && message.role === 'user') {
             welcomeMsg.remove();
@@ -133,15 +126,12 @@
         const contentDiv = document.createElement('div');
         contentDiv.className = 'message-content';
         
-        // Format the content
         if (message.plan) {
             // Store current plan
             currentPlan = message.plan;
             
-            // Add text content
             contentDiv.innerHTML = formatMessageContent(message.content);
             
-            // Add plan visualization
             const planDiv = createPlanVisualization(message.plan);
             contentDiv.appendChild(planDiv);
         } else {
@@ -158,7 +148,6 @@
         chatMessages.appendChild(messageDiv);
         scrollToBottom();
 
-        // Re-enable send button
         sendBtn.disabled = false;
     }
 
@@ -166,7 +155,6 @@
         const container = document.createElement('div');
         container.className = 'plan-container';
 
-        // Plan header with copy button
         const header = document.createElement('div');
         header.className = 'plan-header';
 
@@ -189,7 +177,6 @@
         header.appendChild(copyBtn);
         container.appendChild(header);
 
-        // Plan content
         const contentDiv = document.createElement('div');
         contentDiv.innerHTML = renderPlan(plan);
         container.appendChild(contentDiv);
@@ -202,7 +189,6 @@
         
         let html = '';
 
-        // Add summary
         if (plan.summary) {
             html += `
                 <div class="plan-summary">
@@ -211,7 +197,6 @@
             `;
         }
 
-        // Phases
         if (plan.phases && plan.phases.length > 0) {
             plan.phases.forEach((phase, phaseIndex) => {
                 html += `<div class="phase">
@@ -257,15 +242,9 @@
     }
 
     function formatMessageContent(content) {
-        // Convert markdown-style formatting to HTML
         let formatted = escapeHtml(content);
-        
-        // Bold text
         formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-        
-        // Line breaks
         formatted = formatted.replace(/\n/g, '<br>');
-        
         return formatted;
     }
 
@@ -279,7 +258,6 @@
     }
 
     function clearChat() {
-        // Remove all messages except keep a new welcome message
         chatMessages.innerHTML = `
             <div class="welcome-message">
                 <p>👋 Chat cleared! Ready for a new task.</p>

@@ -1,0 +1,111 @@
+{
+  "name": "traycer-lite",
+  "publisher": "traycer",
+  "displayName": "traycer-lite",
+  "description": "Generate AI-assisted implementation plans directly inside VS Code.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.104.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "traycer-lite.generatePlan",
+        "title": "Traycer Lite: Generate Plan",
+        "category": "Traycer"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "traycer-sidebar",
+          "title": "Traycer Lite",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "traycer-sidebar": [
+        {
+          "type": "webview",
+          "id": "traycer-lite.sidebarView",
+          "name": "Plan Generator",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Traycer Lite",
+      "properties": {
+        "traycer-lite.llm.provider": {
+          "type": "string",
+          "default": "mock",
+          "enum": [
+            "mock",
+            "openai",
+            "anthropic",
+            "gemini"
+          ],
+          "description": "Large language model provider used for plan generation."
+        },
+        "traycer-lite.llm.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "API key for the selected LLM provider. Stored in VS Code settings (consider using secret storage)."
+        },
+        "traycer-lite.llm.baseUrl": {
+          "type": "string",
+          "default": "",
+          "description": "Optional custom base URL for the selected provider."
+        },
+        "traycer-lite.llm.model": {
+          "type": "string",
+          "default": "",
+          "description": "Model identifier to use for plan generation."
+        },
+        "traycer-lite.llm.temperature": {
+          "type": "number",
+          "default": 0.2,
+          "description": "Creativity level for the LLM response (0-1)."
+        },
+        "traycer-lite.llm.maxTokens": {
+          "type": "number",
+          "default": 8192,
+          "description": "Maximum number of tokens to request from the LLM."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/vscode": "^1.104.0",
+    "@typescript-eslint/eslint-plugin": "^8.45.0",
+    "@typescript-eslint/parser": "^8.45.0",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.36.0",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3",
+    "webpack": "^5.102.0",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1"
+  }
+}
